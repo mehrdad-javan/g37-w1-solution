@@ -8,6 +8,9 @@ const DataTable = () => {
     ];
     
     const [studentList, setStudentList] = useState(initialData);
+    const [showDetails, setShowDetails] = useState(false);
+    const studentDefaultData = {id: 0, firstName: "", lastName: "", age: 0, birthDate: "", country: "", city: "" }
+    const [student, setStudent] = useState(studentDefaultData);
 
 const TableHeader = () => {
     return (
@@ -26,16 +29,56 @@ const TableRow = (props) => {
     <tbody>
         {
             props.list.map((student) => (
-            <tr>
+            <tr key={student.id}>
                 <td>{student.id}</td>
                 <td>{student.firstName}</td>
                 <td>{student.lastName}</td>
                 <td>{student.age}</td>
+                <td><TableAction student={student} /></td>
             </tr>
                 ) )
         }
     </tbody>
     );
+};
+
+const TableAction = (props) => {
+
+    const showData = () => {
+        setShowDetails(true);
+        console.log("SHOW DATA",props.student);
+        setStudent(props.student);
+    };
+
+    return (<button type="button" className="btn btn-primary" onClick={showData} >Details</button>);
+
+};
+
+const ShowStudentDetails = () => {
+
+    
+    if(showDetails){
+        return(
+            <div className="card">
+                <div className="card-header bg-info text-white">
+                    Student Information
+                </div>
+                <div className="card-body">
+                    <h5 className="card-title">Country and City</h5>
+                    <p className="card-text">ID: {student.id}</p>
+                    <p className="card-text">Name: {student.firstName} {student.lastName}</p>
+                    <p className="card-text">BirthDate: {student.birthDate}</p>
+                </div>
+                <div className="card-footer">
+                    <button type="button" className="btn btn-danger" onClick={()=> {setShowDetails(false); setStudent(studentDefaultData)}}>Close</button>
+                </div>
+            </div>
+        );
+    } else {
+        return ("");
+    }
+    
+
 };
 
     return (
@@ -44,6 +87,8 @@ const TableRow = (props) => {
                 <TableHeader />
                 <TableRow list={studentList} />
             </table>
+            <br/>
+            <ShowStudentDetails />
         </div>
     );
 };
